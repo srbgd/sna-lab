@@ -1,0 +1,32 @@
+	Documentation
+
+1. docker-compose.yml
+Docker compose file. It starts 4 services (nginx, app, fluentd, mongodb) and
+creates 2 networks (internal and external).
+
+2. nginx/nginx.conf
+Nginx config file. It runs a proxy server which forwards http requestsa from
+port 80 of the server in the external network to port 5000 of the app
+container in the internal network.
+
+3. fluent/fluent.conf
+Fluentd config file. It makes the fluentd demon listen on port 24224 and send
+all logs to mongo databes locatated on mongodb host (another container) on
+port 27017 with 10 seconds flush interval.
+
+4. fluent/Dockerfile
+Fluentd dockerfile. It installs mongodb plugin on the defualt fluentd image
+
+5. app/app.py
+Source code of flask application. It send logs to fluentd container.
+
+6. app/Dockerfile
+Dockerfile for flask application. It runs the python source code in the
+official python3 docker image.
+
+7. app/requirements.txt
+Requirements file for the application. It installs flask and fluent-logger.
+
+8. app/templates/index.html
+Html template of the application. It allows to choose the type of log message
+to send.
