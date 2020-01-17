@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  mongodb:
+    image: mongo
+    ports:
+      - 8081:8081
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    networks:
+      - internal
+
+  fluentd:
+    build: ./fluent
+    ports:
+      - 24224:24224
+    volumes:
+      - './fluent/fluent.conf:/fluentd/etc/fluent.conf'
+    networks:
+      - internal
+
+  app:
+    build: ./app
+    ports:
+      - 5000:5000
+    networks:
+      - internal
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - internal
+      - external
+
+
+networks:
+  internal:
+    internal: true
+    driver: bridge
+  external:
